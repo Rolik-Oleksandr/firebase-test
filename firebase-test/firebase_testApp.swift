@@ -8,7 +8,9 @@ struct firebase_testApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                AuthenticationView()
+            }
         }
     }
 }
