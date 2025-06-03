@@ -9,26 +9,21 @@ final class SignInEmailViewModel: ObservableObject {
         
     }
     
-    func signIn() {
+    func signIn() async throws {
         guard !email.isEmpty, !password.isEmpty else {
             print("🛑No such input data")
             return
         }
         
-        Task {
-            do {
-                let returnedUserData = try await AuthenticationManager.shared.createUser(email: email, password: password)
-                print("✅Success \(returnedUserData)")
-            } catch {
-                print("🛑Error \(error)")
-            }
-        }
+        let returnedUserData = try await AuthenticationManager.shared.createUser(email: email, password: password)
+        print("✅Success \(returnedUserData)")
     }
     
 }
 
 struct SignInEmailView: View {
     @StateObject private var viewModel = SignInEmailViewModel()
+    @Binding var showSignInView: Bool
     
     var body: some View {
         VStack {
@@ -43,14 +38,20 @@ struct SignInEmailView: View {
                 .cornerRadius(10)
             
             Button {
-                viewModel.signIn()
+                Task {
+                    do {
+                        try await viewModel.signIn()
+                    } catch {
+                        
+                    }
+                }
             } label: {
                 Text("Sign In")
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 50)
-                    .background(Color.blue) 
+                    .background(Color.blue)
             }
         }
         .padding()
@@ -60,6 +61,6 @@ struct SignInEmailView: View {
 
 #Preview {
     NavigationStack {
-        SignInEmailView()
+        SignInEmailView(showSignInView: .constant(true))
     }
 }
