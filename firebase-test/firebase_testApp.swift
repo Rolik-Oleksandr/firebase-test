@@ -9,7 +9,7 @@ struct firebase_testApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                AuthenticationView()
+                AuthenticationView(showSignInView: .constant(true))
             }
         }
     }
